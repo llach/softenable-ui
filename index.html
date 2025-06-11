@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SoftEnable Study</title>
+  <script src="app.js" defer></script>
+  <link href="./output.css" rel="stylesheet" />
+</head>
+<body class="bg-gray-50 flex flex-col min-h-screen px-1 py-1">
+
+  <!-- Heading -->
+  <h1 class="text-4xl font-semibold text-gray-800 my-2 text-center">SoftEnable Study</h1>
+
+  <!-- Center box that fills remaining vertical space between heading and logos -->
+  <div class="flex-grow my-5 flex justify-center">
+    <div id="content-box" class="border-2 border-gray-300 rounded-xl shadow-md bg-white p-4 flex w-full max-w-[95vw] min-h-0">
+
+      <!-- Image section (30%) -->
+      <div id="image-container" class="w-3/10 flex items-center justify-center pr-2 overflow-hidden">
+        <div class="mx-2 flex items-center justify-center w-full h-full">
+          <img id="dynamic-image" src="images/default2.png" alt="Visual" class="object-contain max-h-full max-w-full rounded" />
+        </div>
+      </div>
+
+      <!-- Text section (70%) -->
+      <div class="mx-2 flex-1 flex items-center justify-center overflow-auto">
+        <p id="dynamic-text" class="text-gray-700 text-4xl font-sans leading-relaxed text-center">
+          Welcome to the SoftEnable study! </br>
+          Please wait until the instructions are shown on this screen.
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Logos at bottom with centered SoftEnable logo -->
+  <div class="flex justify-center my-2">
+    <div class="flex justify-between w-full max-w-4xl items-center">
+      <div class="flex justify-end flex-1 space-x-4">
+        <img src="images/iri_logo.png" alt="IRI Logo" class="max-h-[10vh] object-contain" />
+      </div>
+      <div class="flex justify-center flex-1">
+        <img src="images/softenable_logo.png" alt="SoftEnable Logo" class="max-h-[10vh] object-contain" />
+      </div>
+      <div class="flex justify-start flex-1 space-x-4">
+        <img src="images/hospital_clinic_logo.png" alt="Hospital Clinic Logo" class="max-h-[10vh] object-contain" />
+      </div>
+    </div>
+  </div>
+
+</body>
+</html>
