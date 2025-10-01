@@ -1,5 +1,5 @@
 approach:
   text: "Please wait while I grasp the gown from the shelf."
   image: iri_logo.png
-grasping:
+placing:
   text: "I will place the gown on the table now."

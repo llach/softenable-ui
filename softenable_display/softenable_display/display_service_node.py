@@ -7,6 +7,11 @@ from rclpy.node import Node
 from ament_index_python.packages import get_package_share_directory
 from softenable_display_msgs.srv import SetDisplay
 
+# at top of display_service_node.py
+class DuplicatePresetError(Exception):
+    pass
+
+
 ALLOWED_KEYS = {"text", "image"}
 
 class DisplayService(Node):
@@ -39,63 +44,99 @@ class DisplayService(Node):
 
     # --------- YAML loading / validation ----------
     def _load_presets(self):
+        import glob, yaml, os
+        from collections import Counter
+
         if not os.path.isdir(self.configs_dir):
             self.get_logger().warn(f"No configs dir found at {self.configs_dir}")
             return
 
-        loaded = 0
+        self.presets = {}
+        name_files = {}          # name -> [files it appears in] (preserve order)
+        counts = Counter()       # name -> total occurrences across all YAMLs
+        candidates = []          # (file, name, spec) valid entries
+
         for path in sorted(glob.glob(os.path.join(self.configs_dir, '**', '*.yaml'), recursive=True)):
             try:
                 with open(path, 'r', encoding='utf-8') as f:
                     doc = yaml.safe_load(f) or {}
-                if not isinstance(doc, dict):
-                    self.get_logger().warn(f"Skip {path}: top-level must be a mapping")
-                    continue
-                for name, spec in doc.items():
-                    if not isinstance(name, str) or not isinstance(spec, dict):
-                        self.get_logger().warn(f"Skip {path}: invalid entry for '{name}'")
-                        continue
-                    extra = set(spec.keys()) - ALLOWED_KEYS
-                    if extra:
-                        self.get_logger().warn(f"Skip '{name}' in {path}: unknown keys {sorted(extra)}")
-                        continue
-                    if 'text' not in spec or not isinstance(spec['text'], str) or not spec['text']:
-                        self.get_logger().warn(f"Skip '{name}' in {path}: 'text' is required non-empty string")
-                        continue
-                    image_rel = spec.get('image', '')
-                    if image_rel is None:
-                        image_rel = ''
-                    if not isinstance(image_rel, str):
-                        self.get_logger().warn(f"Skip '{name}' in {path}: 'image' must be string")
-                        continue
-
-                    # Normalize image path (relative to webroot/images), and validate if present
-                    if image_rel:
-                        # allow both "iri_logo.png" and "images/iri_logo.png"
-                        normalized = image_rel.lstrip('/').replace('\\', '/')
-                        if not normalized.startswith('images/'):
-                            normalized = f'images/{normalized}'
-                        fs_path = os.path.join(self.web_dir, *normalized.split('/'))
-                        if not os.path.isfile(fs_path):
-                            self.get_logger().warn(f"Preset '{name}': image file not found: {fs_path}")
-                            # allow anyway, frontend will just hide if 404? better to keep strict:
-                            # continue
-                        image_rel = normalized
-                    else:
-                        image_rel = ''
-
-                    self.presets[name] = {
-                        'text': spec['text'],
-                        'image': image_rel
-                    }
-                    loaded += 1
             except Exception as e:
                 self.get_logger().warn(f"Failed to load {path}: {e}")
+                continue
 
-        if loaded == 0:
+            if not isinstance(doc, dict):
+                self.get_logger().warn(f"Skip {path}: top-level must be a mapping")
+                continue
+
+            seen_in_file = set()
+            for name, spec in doc.items():
+                # track occurrences (including duplicates within the same file)
+                counts[name] += 1
+                name_files.setdefault(name, []).append(path)
+
+                if not isinstance(name, str):
+                    self.get_logger().warn(f"Skip entry with non-string key in {path}")
+                    continue
+                if not isinstance(spec, dict):
+                    self.get_logger().warn(f"Skip '{name}' in {path}: value must be a mapping")
+                    continue
+
+                extra = set(spec.keys()) - {"text", "image"}
+                if extra:
+                    self.get_logger().warn(f"Skip '{name}' in {path}: unknown keys {sorted(extra)}")
+                    continue
+                if "text" not in spec or not isinstance(spec["text"], str) or not spec["text"]:
+                    self.get_logger().warn(f"Skip '{name}' in {path}: 'text' is required non-empty string")
+                    continue
+
+                # normalize optional image relative to webroot/images
+                image_rel = spec.get("image", "")
+                if image_rel is None:
+                    image_rel = ""
+                if not isinstance(image_rel, str):
+                    self.get_logger().warn(f"Skip '{name}' in {path}: 'image' must be string if provided")
+                    continue
+                if image_rel:
+                    normalized = image_rel.lstrip('/').replace('\\', '/')
+                    if not normalized.startswith('images/'):
+                        normalized = f'images/{normalized}'
+                    fs_path = os.path.join(self.web_dir, *normalized.split('/'))
+                    if not os.path.isfile(fs_path):
+                        self.get_logger().warn(f"Preset '{name}' in {path}: image not found: {fs_path}")
+                    image_rel = normalized
+                else:
+                    image_rel = ""
+
+                candidates.append((path, name, {"text": spec["text"], "image": image_rel}))
+
+        # ---- duplicate names detection (across all files and within a single file) ----
+        dup_names = sorted([n for n, c in counts.items() if c > 1])
+        if dup_names:
+            # Pretty list with paths relative to the package share so it prints like "configs/a.yaml"
+            rel_lines = []
+            # make paths relative to the package share dir (so they start with "configs/")
+            share_dir = self.share_dir if hasattr(self, 'share_dir') else os.path.dirname(self.configs_dir)
+            for n in dup_names:
+                # unique paths, preserve order
+                seen = []
+                for p in name_files[n]:
+                    if p not in seen:
+                        seen.append(p)
+                rels = [os.path.relpath(p, start=share_dir) if p.startswith(share_dir) else p for p in seen]
+                rel_lines.append(f"  - {n}: " + ", ".join(rels))
+            msg = "Duplicate preset names detected across config files:\n" + "\n".join(rel_lines)
+            # raise with the full message; main() logs it cleanly
+            raise DuplicatePresetError(msg)
+
+        # commit candidates
+        for _, name, spec in candidates:
+            self.presets[name] = spec
+
+        if not self.presets:
             self.get_logger().warn("No valid presets loaded.")
         else:
-            self.get_logger().info(f"Loaded {loaded} preset(s) from YAML.")
+            self.get_logger().info(f"Loaded {len(self.presets)} preset(s) from YAML.")
+
 
     # --------- Service handler ----------
     def handle_set_display(self, req: SetDisplay.Request, res: SetDisplay.Response):
