@@ -5,7 +5,7 @@ import requests
 import rclpy
 from rclpy.node import Node
 from ament_index_python.packages import get_package_share_directory
-from softenable_display_msgs.srv import SetDisplay
+from softenable_display_msgs.srv import SetDisplay, TTS
 
 # at top of display_service_node.py
 class DuplicatePresetError(Exception):
@@ -41,6 +41,12 @@ class DisplayService(Node):
         # Service
         self.srv = self.create_service(SetDisplay, 'set_display', self.handle_set_display)
         self.get_logger().info(f"Ready. POST target: {self.url}. Presets: {sorted(self.presets.keys())}")
+
+        self.tts_cli = self.create_client(TTS, 'tts')
+
+        # Wait for the service to become available
+        while not self.tts_cli.wait_for_service(timeout_sec=2.0):
+            self.get_logger().info('Waiting for /tts service...')
 
     # --------- YAML loading / validation ----------
     def _load_presets(self):
@@ -137,7 +143,6 @@ class DisplayService(Node):
         else:
             self.get_logger().info(f"Loaded {len(self.presets)} preset(s) from YAML.")
 
-
     # --------- Service handler ----------
     def handle_set_display(self, req: SetDisplay.Request, res: SetDisplay.Response):
         name = req.name
@@ -154,6 +159,7 @@ class DisplayService(Node):
         }
 
         try:
+            self.get_logger().warn(f"{req}")
             r = requests.post(self.url, json=payload, timeout=2.0)
             if r.ok:
                 self.get_logger().info(f"Applied preset '{name}'")
@@ -161,6 +167,10 @@ class DisplayService(Node):
             else:
                 self.get_logger().error(f"Server returned {r.status_code}: {r.text}")
                 res.success = False
+            
+            if req.use_tts:
+                self.tts_cli.call_async(TTS.Request(text = preset['text']))
+
         except Exception as e:
             self.get_logger().error(f"POST {self.url} failed: {e}")
             res.success = False

@@ -46,5 +46,6 @@ setup(
     entry_points={'console_scripts': [
         'server = softenable_display.server_runner:main',
         'display_service = softenable_display.display_service_node:main',
+        'tts_service = softenable_display.tts_service:main',
     ]},
 )

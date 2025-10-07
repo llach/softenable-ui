@@ -28,9 +28,17 @@ def generate_launch_description():
         arguments=['--ros-args', '--log-level', 'rmw_cyclonedds_cpp:=error']  
     )
 
+    tts_node = Node(
+        package='softenable_display',
+        executable='tts_service',
+        name='tts_service',
+        output='screen'
+    )
+
     return LaunchDescription([
         port_arg,
         set_port_env,
+        tts_node,
         server_node,
         service_node,
     ])
