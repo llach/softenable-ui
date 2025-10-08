@@ -48,6 +48,8 @@ class TTSService(Node):
             for chunk in chunks:
                 sd.play(chunk.audio_float_array, samplerate=chunk.sample_rate)
                 sd.wait()
+            
+            self.get_logger().info(f"Done talking.")
 
         except Exception as e:
             self.get_logger().error(f"Error during synthesis: {e}")

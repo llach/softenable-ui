@@ -1,4 +1,5 @@
 bool use_tts True
+bool blocking False
 string name 
 ---
 bool success
