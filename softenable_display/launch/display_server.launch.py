@@ -35,10 +35,19 @@ def generate_launch_description():
         output='screen'
     )
 
+    change_display_node = Node(
+        package='softenable_display',
+        executable='change_display',
+        name='change_display',
+        output='screen'
+    )
+
+
     return LaunchDescription([
         port_arg,
         set_port_env,
         tts_node,
         server_node,
         service_node,
+        change_display_node,
     ])
