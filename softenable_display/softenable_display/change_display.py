@@ -57,7 +57,8 @@ class SetDisplaySwitcher(Node):
             req.use_tts = True
 
             future = self.cli_display.call_async(req)
-            rclpy.spin_until_future_complete(self, future)
+            future.add_done_callback(lambda fut: self.get_logger().info("Preset done"))
+
             try:
                 result = future.result()
                 if result.success:
