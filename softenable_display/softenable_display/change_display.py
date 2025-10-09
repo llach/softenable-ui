@@ -44,7 +44,7 @@ class SetDisplaySwitcher(Node):
 
     # ----------- Display switching loop -----------
     def switch_displays(self):
-        for i in range(10):
+        for i in range(2,8):
             if self.stop_requested.is_set():
                 self.get_logger().info("Switching aborted.")
                 return
