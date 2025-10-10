@@ -5,26 +5,35 @@ const path = require("path");
 const { URL } = require("url");
 
 const PORT = process.env.PORT || 8080;
-const ROOT = process.env.WEB_ROOT ? path.resolve(process.env.WEB_ROOT) : path.resolve(__dirname);
+const ROOT = process.env.WEB_ROOT
+  ? path.resolve(process.env.WEB_ROOT)
+  : path.resolve(__dirname);
 
 let clients = [];
 
 function serveFile(filePath, res) {
   fs.readFile(filePath, (err, data) => {
-    if (err) { res.writeHead(404); res.end("Not found"); return; }
+    if (err) {
+      res.writeHead(404);
+      res.end("Not found");
+      return;
+    }
     const ext = path.extname(filePath).toLowerCase();
     const types = {
-      ".html":"text/html; charset=utf-8",
-      ".js":"text/javascript; charset=utf-8",
-      ".css":"text/css; charset=utf-8",
-      ".png":"image/png",
-      ".jpg":"image/jpeg",
-      ".jpeg":"image/jpeg",
-      ".gif":"image/gif",
-      ".webp":"image/webp",
-      ".svg":"image/svg+xml",
+      ".html": "text/html; charset=utf-8",
+      ".js": "text/javascript; charset=utf-8",
+      ".css": "text/css; charset=utf-8",
+      ".png": "image/png",
+      ".jpg": "image/jpeg",
+      ".jpeg": "image/jpeg",
+      ".gif": "image/gif",
+      ".webp": "image/webp",
+      ".svg": "image/svg+xml",
     };
-    res.writeHead(200, {"Content-Type": types[ext] || "application/octet-stream", "Cache-Control":"no-store"});
+    res.writeHead(200, {
+      "Content-Type": types[ext] || "application/octet-stream",
+      "Cache-Control": "no-store",
+    });
     res.end(data);
   });
 }
@@ -37,31 +46,38 @@ const server = http.createServer((req, res) => {
     res.writeHead(200, {
       "Content-Type": "text/event-stream",
       "Cache-Control": "no-cache",
-      "Connection": "keep-alive",
+      Connection: "keep-alive",
     });
     res.write("\n");
     clients.push(res);
-    req.on("close", () => { clients = clients.filter(c => c !== res); });
+    req.on("close", () => {
+      clients = clients.filter((c) => c !== res);
+    });
     return;
   }
 
   // Accept updates (only thing that mutates state)
   if (req.method === "POST" && url.pathname === "/update") {
     let body = "";
-    req.on("data", chunk => body += chunk);
+    req.on("data", (chunk) => (body += chunk));
     req.on("end", () => {
       try {
         let data = {};
-        try { data = JSON.parse(body || "{}"); } catch {}
+        try {
+          data = JSON.parse(body || "{}");
+        } catch {}
         const text = String(data.text || "");
-        const image = ("image" in data) ? String(data.image || "") : ""; // <— missing => clear
+        const frame = String(data.frame || "");
+        const image = "image" in data ? String(data.image || "") : ""; // <— missing => clear
 
-        const payload = { text, image };
+        const payload = { text, frame, image };
         const msg = `data: ${JSON.stringify(payload)}\n\n`;
-        clients.forEach(c => c.write(msg));
-        res.writeHead(200); res.end("ok");
+        clients.forEach((c) => c.write(msg));
+        res.writeHead(200);
+        res.end("ok");
       } catch {
-        res.writeHead(400); res.end("bad json");
+        res.writeHead(400);
+        res.end("bad json");
       }
     });
     return;
@@ -69,14 +85,21 @@ const server = http.createServer((req, res) => {
 
   // Serve your index and assets (output.css, images, etc.)
   if (req.method === "GET") {
-    const rel = url.pathname === "/" ? "index.html" : decodeURIComponent(url.pathname.replace(/^\/+/, ""));
+    const rel =
+      url.pathname === "/"
+        ? "index.html"
+        : decodeURIComponent(url.pathname.replace(/^\/+/, ""));
     const filePath = path.join(ROOT, rel);
     // prevent path traversal
-    if (!filePath.startsWith(ROOT)) { res.writeHead(403); return res.end("forbidden"); }
+    if (!filePath.startsWith(ROOT)) {
+      res.writeHead(403);
+      return res.end("forbidden");
+    }
     return serveFile(filePath, res);
   }
 
-  res.writeHead(404); res.end("not found");
+  res.writeHead(404);
+  res.end("not found");
 });
 
 server.listen(PORT, () => {

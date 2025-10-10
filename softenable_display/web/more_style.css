@@ -1,0 +1,11 @@
+.frame-width {
+    border-width: 20px;
+}
+
+.red-frame {
+    border-color: red;
+}
+
+.green-frame {
+    border-color: green;
+}
