@@ -49,7 +49,7 @@ class SetDisplaySwitcher(Node):
                 self.get_logger().info("Switching aborted.")
                 return
 
-            preset = f"protocol_{i+1}"
+            preset = f"protocol_{i}"
             self.get_logger().info(f"Applying preset {preset}")
 
             req = SetDisplay.Request()
@@ -57,19 +57,10 @@ class SetDisplaySwitcher(Node):
             req.use_tts = True
 
             future = self.cli_display.call_async(req)
-            future.add_done_callback(lambda fut: self.get_logger().info("Preset done"))
-
-            try:
-                result = future.result()
-                if result.success:
-                    self.get_logger().info(f"Preset {preset} applied successfully.")
-                else:
-                    self.get_logger().warn(f"Preset {preset} failed.")
-            except Exception as e:
-                self.get_logger().error(f"Service call failed for {preset}: {e}")
+            future.add_done_callback(lambda fut: self.get_logger().info(f"Preset '{preset}' done"))
 
             # Check again before waiting
-            for _ in range(15):
+            for _ in range(1):
                 if self.stop_requested.is_set():
                     self.get_logger().info("Switching aborted during sleep.")
                     return

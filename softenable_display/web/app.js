@@ -8,6 +8,8 @@ const contentBox = document.getElementById("content-box");
 evtSource.onmessage = (e) => {
   const { text, frame, image } = JSON.parse(e.data);
 
+  console.log(`Got payload:\n${JSON.stringify(JSON.parse(e.data), null, 2)}`);
+
   textEl.innerHTML = (text || "").replace(/\n/g, "<br/>");
 
   if (image && image.length) {

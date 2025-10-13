@@ -4,27 +4,34 @@ protocol_1:
 protocol_2:
   text: "While I prepare your gown, please start the dressing protocol standing in front of the counter"
   image: unfolding_protocol/Image_02.png
+  frame: red
 protocol_3:
   text: "Remove any jewelry or watch"
   image: unfolding_protocol/Image_03.png
+  frame: red
 protocol_4:
   text: "Tuck the inner coat into your trousers"
   image: unfolding_protocol/Image_04.png
+  frame: green
 protocol_5:
   text: "Tie up your hair and put on the cap"
   image: unfolding_protocol/Image_05.png
 protocol_6:
   text: "Apply hand sanitizer"
   image: unfolding_protocol/Image_06.png
+  frame: red
 protocol_7:
   text: "Put on gloves"
   image: unfolding_protocol/Image_07.png
+  frame: red
 protocol_8:
   text: "Take the gown I'm handing you and put it on"
   image: unfolding_protocol/Image_08.png
+  frame: red
 protocol_9:
   text: "Put on a face mask"
   image: unfolding_protocol/Image_09.png
+  frame: red
 protocol_10:
   text: "Put on the plastic apron"
   image: unfolding_protocol/Image_10.png

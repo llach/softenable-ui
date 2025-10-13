@@ -68,6 +68,7 @@ const server = http.createServer((req, res) => {
         } catch {}
         const text = String(data.text || "");
         const frame = String(data.frame || "");
+        console.log(data);
         const image = "image" in data ? String(data.image || "") : ""; // <— missing => clear
 
         const payload = { text, frame, image };

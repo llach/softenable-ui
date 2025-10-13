@@ -87,7 +87,7 @@ class DisplayService(Node):
                     self.get_logger().warn(f"Skip '{name}' in {path}: value must be a mapping")
                     continue
 
-                extra = set(spec.keys()) - {"text", "image"}
+                extra = set(spec.keys()) - {"text", "image", "frame"}
                 if extra:
                     self.get_logger().warn(f"Skip '{name}' in {path}: unknown keys {sorted(extra)}")
                     continue
@@ -113,7 +113,7 @@ class DisplayService(Node):
                 else:
                     image_rel = ""
 
-                candidates.append((path, name, {"text": spec["text"], "image": image_rel}))
+                candidates.append((path, name, {"text": spec["text"], "image": image_rel, "frame": spec.get("frame", "")}))
 
         # ---- duplicate names detection (across all files and within a single file) ----
         dup_names = sorted([n for n, c in counts.items() if c > 1])
@@ -155,11 +155,14 @@ class DisplayService(Node):
         payload = {
             'text': preset['text'],
             # send empty string to clear image, or 'images/...' to show
-            'image': preset['image']
+            'image': preset['image'],
+            'frame': preset.get("frame", "")
         }
 
+        self.get_logger().info(f"\n\n{preset}\npayload\n{payload}")
+
+
         try:
-            self.get_logger().warn(f"{req}")
             r = requests.post(self.url, json=payload, timeout=2.0)
             if r.ok:
                 self.get_logger().info(f"Applied preset '{name}'")
