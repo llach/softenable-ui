@@ -4,10 +4,10 @@ import base64
 import requests
 
 SERVER = "http://localhost:8080/update"
-IMAGES_DIR = os.path.join(os.path.dirname(__file__), "images")
+IMAGES_DIR = os.path.join(os.path.dirname(__file__), "softenable_display/web/images")
 
-def send_update(text, image_path=None):
-    data = {"text": text}
+def send_update(text, image_path=None, frame=""):
+    data = {"text": text, "frame": frame }
 
     if image_path:
         full_path = os.path.join(IMAGES_DIR, image_path)
@@ -24,14 +24,14 @@ def send_update(text, image_path=None):
 
 if __name__ == "__main__":
     # 1) text-only
-    send_update("Hello, this is text-only. Stand by.")
+    send_update("Hello, this is text-only. Stand by.", frame="")
     time.sleep(2)
 
     # 2) with gloves.jpg
-    send_update("Here is the gloves picture.", "gloves.jpg")
+    send_update("Here is the gloves picture.", "gloves.jpg", "green")
     time.sleep(2)
 
     # 3) with iri_logo.png
-    send_update("SoftEnable IRI Logo incoming.", "iri_logo.png")
+    send_update("SoftEnable IRI Logo incoming.", "iri_logo.png", "red")
     time.sleep(2)
 
