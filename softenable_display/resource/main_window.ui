@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>600</width>
+    <height>400</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Control Panel</string>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <layout class="QVBoxLayout" name="verticalLayout">
+
+    <!-- 1️⃣ Bag Opening -->
+    <item>
+     <widget class="QGroupBox" name="groupBag">
+      <property name="title">
+       <string>Bag Opening</string>
+      </property>
+      <layout class="QHBoxLayout" name="horizontalLayout1">
+       <item><widget class="QPushButton" name="btnBagDemo"><property name="text"><string>Demo</string></property></widget></item>
+       <item><widget class="QPushButton" name="btnBagOpen"><property name="text"><string>Open</string></property></widget></item>
+       <item><widget class="QPushButton" name="btnBagRetreat"><property name="text"><string>Retreat + Slides</string></property></widget></item>
+      </layout>
+     </widget>
+    </item>
+
+    <!-- 2️⃣ Unstacking -->
+    <item>
+     <widget class="QGroupBox" name="groupUnstacking">
+      <property name="title">
+       <string>Unstacking</string>
+      </property>
+      <layout class="QHBoxLayout" name="horizontalLayout2">
+       <item><widget class="QPushButton" name="btnUnstackDemo"><property name="text"><string>Demo</string></property></widget></item>
+       <item><widget class="QPushButton" name="btnUnstackSlides"><property name="text"><string>Slides</string></property></widget></item>
+      </layout>
+     </widget>
+    </item>
+
+    <!-- 3️⃣ Unfolding -->
+    <item>
+     <widget class="QGroupBox" name="groupUnfolding">
+      <property name="title">
+       <string>Unfolding</string>
+      </property>
+      <layout class="QHBoxLayout" name="horizontalLayout3">
+       <item><widget class="QPushButton" name="btnUnfold"><property name="text"><string>Unfold</string></property></widget></item>
+      </layout>
+     </widget>
+    </item>
+
+    <!-- 4️⃣ Tools -->
+    <item>
+     <widget class="QGroupBox" name="groupTools">
+      <property name="title">
+       <string>Tools</string>
+      </property>
+      <layout class="QHBoxLayout" name="horizontalLayout4">
+       <item><widget class="QPushButton" name="btnToolsOpen"><property name="text"><string>Open</string></property></widget></item>
+       <item><widget class="QPushButton" name="btnToolsClose"><property name="text"><string>Close</string></property></widget></item>
+       <item><widget class="QPushButton" name="btnFinalSlides"><property name="text"><string>Final Slides</string></property></widget></item>
+      </layout>
+     </widget>
+    </item>
+
+   </layout>
+  </widget>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>
