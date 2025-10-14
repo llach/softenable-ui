@@ -6,12 +6,13 @@ import threading
 import subprocess
 
 from PyQt5 import QtWidgets, uic  # or PyQt6 if you prefer
-from PyQt5.QtCore import QThreadPool, QRunnable, pyqtSlot, QTimer
+from PyQt5.QtCore import QThreadPool, QRunnable, pyqtSlot
 from ament_index_python.packages import get_package_share_directory
 
 from rclpy.node import Node
-from std_srvs.srv import Trigger
 from stack_msgs.srv import RollerGripper
+from softenable_display_msgs.srv import SetDisplay
+
 
 class Worker(QRunnable):
     def __init__(self, fn, *args, **kwargs):
@@ -31,11 +32,13 @@ class ControlNode(Node):
         super().__init__("control_panel_node")
 
         # create service clients
+        self.cli_display = self.create_client(SetDisplay, "set_display")
         self.gripper_l_cli = self.create_client(RollerGripper, "left_roller_gripper")
         self.gripper_r_cli = self.create_client(RollerGripper, "right_roller_gripper")
 
         ### check if services are running. not good when debugging.
         # for cli in [
+        #     self.cli_display,
         #     self.gripper_l_cli,
         #     self.gripper_r_cli
         # ]:
@@ -44,19 +47,27 @@ class ControlNode(Node):
         #         exit(-1)
 
     def open_grippers(self):
+        print("opening gripper")
 
         fut_l = self.gripper_l_cli.call_async(RollerGripper.Request(finger_pos=2000))
         fut_r = self.gripper_r_cli.call_async(RollerGripper.Request(finger_pos=2500))
 
         self.wait_for_futures([fut_l, fut_r])
 
-    
     def close_grippers(self):
+        print("closing gripper")
 
         fut_l = self.gripper_l_cli.call_async(RollerGripper.Request(finger_pos=3400))
         fut_r = self.gripper_r_cli.call_async(RollerGripper.Request(finger_pos=800))
 
         self.wait_for_futures([fut_l, fut_r])
+
+    def set_display(self, preset):
+        print(f"setting display preset {preset}")
+
+        self.wait_for_futures([
+            self.cli_display.call_async(SetDisplay.Request(name=preset))
+        ])
 
     def wait_for_futures(self, futures):
         for f in futures: rclpy.spin_until_future_complete(self, f)
@@ -80,11 +91,11 @@ class ControlPanel(QtWidgets.QMainWindow):
 
         ##### Button setup
         self.btnBagDemo.clicked.connect(lambda: self.run_with_disable(self.btnBagDemo, self.ros2_run, "stack_approach", "bag_opening"))
-        self.btnBagOpen.clicked.connect(lambda: self.run_with_disable(self.btnBagOpen, self.node.open_grippers))
+        self.btnBagOpen.clicked.connect(lambda: self.run_with_disable(self.btnBagOpen, self.open_and_slide))
         self.btnBagRetreat.clicked.connect(lambda: self.action("Bag Opening Retreat & Slides"))
 
         self.btnUnstackDemo.clicked.connect(lambda: self.run_with_disable(self.btnBagDemo, self.ros2_run, "softenable_bt", "grasp_first_layer"))
-        self.btnUnstackSlides.clicked.connect(lambda: self.action("Unstacking Slides"))
+        self.btnUnstackSlides.clicked.connect(lambda: self.run_with_disable(self.btnBagOpen, self.final_slides))
 
         self.btnUnfold.clicked.connect(lambda: self.action("Unfolding Unfold"))
 
@@ -102,6 +113,18 @@ class ControlPanel(QtWidgets.QMainWindow):
 
         worker = Worker(wrapped)
         self.pool.start(worker)
+
+    def open_and_slide(self):
+        self.node.open_grippers()
+        self.node.set_display("protocol_bag_3")
+
+    def final_slides(self):
+        for p in [
+            "protocol_9",
+            "protocol_10"
+        ]:
+            self.node.set_display(p)
+            time.sleep(5)
 
     def ros2_run(self, package, executable, blocking=True):
         print(f"ROS2 running '{executable}' from package '{package}'")
