@@ -96,7 +96,7 @@ class ControlPanel(QtWidgets.QMainWindow):
         self.btnBagOpen.clicked.connect(lambda: self.run_with_disable(self.btnBagOpen, self.open_and_slide))
         self.btnBagRetreat.clicked.connect(lambda: self.action("Bag Opening Retreat & Slides"))
 
-        self.btnUnstackDemo.clicked.connect(lambda: self.run_with_disable(self.btnBagDemo, self.ros2_run, "softenable_bt", "grasp_first_layer"))
+        self.btnUnstackDemo.clicked.connect(lambda: self.run_with_disable(self.btnUnstackDemo, self.ros2_run, "softenable_bt", "grasp_first_layer"))
         self.btnUnstackSlides.clicked.connect(lambda: self.run_with_disable(self.btnUnstackSlides, self.final_slides))
 
         self.btnUnfold.clicked.connect(lambda: self.action("Unfolding Unfold"))
