@@ -70,7 +70,9 @@ class ControlNode(Node):
         ])
 
     def wait_for_futures(self, futures):
-        for f in futures: rclpy.spin_until_future_complete(self, f)
+        for f in futures: 
+            while not f.done() and rclpy.ok():
+                rclpy.spin_once(self, timeout_sec=0.1)
 
 class ControlPanel(QtWidgets.QMainWindow):
     def __init__(self):
@@ -95,7 +97,7 @@ class ControlPanel(QtWidgets.QMainWindow):
         self.btnBagRetreat.clicked.connect(lambda: self.action("Bag Opening Retreat & Slides"))
 
         self.btnUnstackDemo.clicked.connect(lambda: self.run_with_disable(self.btnBagDemo, self.ros2_run, "softenable_bt", "grasp_first_layer"))
-        self.btnUnstackSlides.clicked.connect(lambda: self.run_with_disable(self.btnBagOpen, self.final_slides))
+        self.btnUnstackSlides.clicked.connect(lambda: self.run_with_disable(self.btnUnstackSlides, self.final_slides))
 
         self.btnUnfold.clicked.connect(lambda: self.action("Unfolding Unfold"))
 
