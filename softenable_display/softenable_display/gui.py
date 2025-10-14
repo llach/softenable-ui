@@ -3,6 +3,7 @@ import sys
 import time
 import rclpy
 import threading
+import subprocess
 
 from PyQt5 import QtWidgets, uic  # or PyQt6 if you prefer
 from PyQt5.QtCore import QThreadPool, QRunnable, pyqtSlot, QTimer
@@ -33,26 +34,29 @@ class ControlNode(Node):
         self.gripper_l_cli = self.create_client(RollerGripper, "left_roller_gripper")
         self.gripper_r_cli = self.create_client(RollerGripper, "right_roller_gripper")
 
-        self.switch_cli = self.create_client(Trigger, "start_switch")
+        ### check if services are running. not good when debugging.
+        # for cli in [
+        #     self.gripper_l_cli,
+        #     self.gripper_r_cli
+        # ]:
+        #     if not cli.wait_for_service(timeout_sec=10.0):
+        #         self.get_logger().warn(f"Service '{cli.service_name}' not available")
+        #         exit(-1)
 
-    def open_gripper(self, side: str, open: bool):
-        """Example service call."""
-        cli = self.gripper_l_cli if side == "left" else self.gripper_r_cli
-        if not cli.wait_for_service(timeout_sec=1.0):
-            self.get_logger().warn(f"{side} gripper service not available")
-            return
+    def open_grippers(self):
 
-        req = RollerGripper.Request()
-        req.open = open
+        fut_l = self.gripper_l_cli.call_async(RollerGripper.Request(finger_pos=2000))
+        fut_r = self.gripper_r_cli.call_async(RollerGripper.Request(finger_pos=2500))
 
-        future = cli.call_async(req)
-        # you can add a done callback if you want:
-        future.add_done_callback(lambda f: print(f"[{side}] Response: {f.result()}"))
+        self.wait_for_futures([fut_l, fut_r])
 
-    def test_srv(self):
-        time.sleep(5)
-        fut = self.switch_cli.call_async(Trigger.Request())
-        self.wait_for_futures([fut])
+    
+    def close_grippers(self):
+
+        fut_l = self.gripper_l_cli.call_async(RollerGripper.Request(finger_pos=3400))
+        fut_r = self.gripper_r_cli.call_async(RollerGripper.Request(finger_pos=800))
+
+        self.wait_for_futures([fut_l, fut_r])
 
     def wait_for_futures(self, futures):
         for f in futures: rclpy.spin_until_future_complete(self, f)
@@ -75,18 +79,17 @@ class ControlPanel(QtWidgets.QMainWindow):
         self.pool = QThreadPool()
 
         ##### Button setup
-        self.btnBagDemo.clicked.connect(lambda: self.run_with_disable(self.btnBagDemo, self.node.test_srv))
-        self.btnBagOpen.clicked.connect(lambda: self.action("Bag Opening Open"))
+        self.btnBagDemo.clicked.connect(lambda: self.run_with_disable(self.btnBagDemo, self.ros2_run, "stack_approach", "bag_opening"))
+        self.btnBagOpen.clicked.connect(lambda: self.run_with_disable(self.btnBagOpen, self.node.open_grippers))
         self.btnBagRetreat.clicked.connect(lambda: self.action("Bag Opening Retreat & Slides"))
 
-        self.btnUnstackDemo.clicked.connect(lambda: self.action("Unstacking Demo"))
+        self.btnUnstackDemo.clicked.connect(lambda: self.run_with_disable(self.btnBagDemo, self.ros2_run, "softenable_bt", "grasp_first_layer"))
         self.btnUnstackSlides.clicked.connect(lambda: self.action("Unstacking Slides"))
 
         self.btnUnfold.clicked.connect(lambda: self.action("Unfolding Unfold"))
 
-        self.btnToolsOpen.clicked.connect(lambda: self.action("Tools Open"))
-        self.btnToolsClose.clicked.connect(lambda: self.action("Tools Close"))
-        self.btnFinalSlides.clicked.connect(lambda: self.action("Final Slides"))
+        self.btnToolsOpen.clicked.connect(lambda: self.run_with_disable(self.btnToolsOpen, self.node.open_grippers))
+        self.btnToolsClose.clicked.connect(lambda: self.run_with_disable(self.btnToolsClose, self.node.close_grippers))
 
     def run_with_disable(self, button, func, *args, **kwargs):
 
@@ -99,6 +102,15 @@ class ControlPanel(QtWidgets.QMainWindow):
 
         worker = Worker(wrapped)
         self.pool.start(worker)
+
+    def ros2_run(self, package, executable, blocking=True):
+        print(f"ROS2 running '{executable}' from package '{package}'")
+
+        proc = subprocess.Popen(["ros2", "run", package, executable])
+        if blocking:
+            print("waiting for process to finish ...")
+            proc.wait()
+        print("all done!")
 
     def action(self, name):
         print(f"[ACTION] {name}")
