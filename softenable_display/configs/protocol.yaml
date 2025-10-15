@@ -17,6 +17,7 @@ protocol_2:
   text: "While I prepare your gown, please start the dressing protocol standing in front of the counter"
   image: unfolding_protocol/Image_02.png
   frame: red
+
 protocol_3:
   text: "Remove any jewelry or watch"
   image: unfolding_protocol/Image_03.png
@@ -37,6 +38,7 @@ protocol_7:
   text: "Put on gloves"
   image: unfolding_protocol/Image_07.png
   frame: red
+  
 protocol_8:
   text: "Take the gown I'm handing you and put it on"
   image: unfolding_protocol/Image_08.png
