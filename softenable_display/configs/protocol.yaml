@@ -3,7 +3,7 @@ protocol_1:
   image: unfolding_protocol/Image_01.png
 
 protocol_bag_1:
-  text: "Please stand back while I open the bag"
+  text: "While I open the bag, please, start by washing your hands."
   frame: red
 protocol_bag_2:
   text: "Please grasp the object from the bag"
@@ -14,7 +14,7 @@ protocol_bag_3:
   frame: green
 
 protocol_2:
-  text: "While I prepare your gown, please start the dressing protocol standing in front of the counter"
+  text: "While I prepare your gown, continue the dressing protocol standing in front of the counter"
   image: unfolding_protocol/Image_02.png
   frame: red
 
@@ -35,7 +35,7 @@ protocol_6:
   image: unfolding_protocol/Image_06.png
   frame: red
 protocol_7:
-  text: "Put on gloves"
+  text: "Put on a second pair of gloves"
   image: unfolding_protocol/Image_07.png
   frame: red
   
