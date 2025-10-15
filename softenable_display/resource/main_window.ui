@@ -23,6 +23,7 @@
        <string>Bag Opening</string>
       </property>
       <layout class="QHBoxLayout" name="horizontalLayout1">
+       <item><widget class="QPushButton" name="btnBagInitial"><property name="text"><string>Initial</string></property></widget></item>
        <item><widget class="QPushButton" name="btnBagDemo"><property name="text"><string>Demo</string></property></widget></item>
        <item><widget class="QPushButton" name="btnBagOpen"><property name="text"><string>Open</string></property></widget></item>
        <item><widget class="QPushButton" name="btnBagRetreat"><property name="text"><string>Retreat + Slides</string></property></widget></item>

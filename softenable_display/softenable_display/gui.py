@@ -92,9 +92,10 @@ class ControlPanel(QtWidgets.QMainWindow):
         self.pool = QThreadPool()
 
         ##### Button setup
+        self.btnBagInitial.clicked.connect(lambda: self.run_with_disable(self.btnBagInitial, self.ros2_run, "stack_approach", "bag_opening", args="initial"))
         self.btnBagDemo.clicked.connect(lambda: self.run_with_disable(self.btnBagDemo, self.ros2_run, "stack_approach", "bag_opening"))
         self.btnBagOpen.clicked.connect(lambda: self.run_with_disable(self.btnBagOpen, self.open_and_slide))
-        self.btnBagRetreat.clicked.connect(lambda: self.action("Bag Opening Retreat & Slides"))
+        self.btnBagRetreat.clicked.connect(lambda: self.run_with_disable(self.btnBagRetreat, self.ros2_run, "stack_approach", "bag_opening", args="retreat"))
 
         self.btnUnstackDemo.clicked.connect(lambda: self.run_with_disable(self.btnUnstackDemo, self.ros2_run, "softenable_bt", "grasp_first_layer"))
         self.btnUnstackSlides.clicked.connect(lambda: self.run_with_disable(self.btnUnstackSlides, self.final_slides))
@@ -128,10 +129,11 @@ class ControlPanel(QtWidgets.QMainWindow):
             self.node.set_display(p)
             time.sleep(5)
 
-    def ros2_run(self, package, executable, blocking=True):
+    def ros2_run(self, package, executable, blocking=True, args=""):
         print(f"ROS2 running '{executable}' from package '{package}'")
 
-        proc = subprocess.Popen(["ros2", "run", package, executable])
+        # proc = subprocess.Popen(["ros2", "run", package, executable])
+        proc = subprocess.Popen(f"ros2 run {package} {executable} {args}".split(" "))
         if blocking:
             print("waiting for process to finish ...")
             proc.wait()
