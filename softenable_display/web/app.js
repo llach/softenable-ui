@@ -1,5 +1,7 @@
 const evtSource = new EventSource("/events");
 
+const heading = document.getElementById("dynamic-heading");
+const headingIcon = document.getElementById("heading-icon");
 const imgContainer = document.getElementById("image-container");
 const img = document.getElementById("dynamic-image");
 const textEl = document.getElementById("dynamic-text");
@@ -11,7 +13,7 @@ evtSource.onmessage = (e) => {
   console.log(`Got payload:\n${JSON.stringify(JSON.parse(e.data), null, 2)}`);
 
   textEl.innerHTML = (text || "").replace(/\n/g, "<br/>");
-
+  
   if (image && image.length) {
     img.src = image; // data URL
     img.alt = ""; // no fallback text
@@ -28,18 +30,33 @@ evtSource.onmessage = (e) => {
     contentBox.classList.add("justify-center");
   }
 
+
   if (frame === "red") {
     contentBox.classList.add("red-frame");
     contentBox.classList.add("frame-width");
     contentBox.classList.remove("green-frame");
+
+    // Change heading for red frame
+    heading.textContent = "Do not go near the robot";
+    headingIcon.src = "images/stop.png";
+    headingIcon.classList.remove("hidden");
+
   } else if (frame === "green") {
     contentBox.classList.add("green-frame");
     contentBox.classList.add("frame-width");
     contentBox.classList.remove("red-frame");
+    // Change heading for red frame
+    heading.textContent = "You can approach the robot";
+    headingIcon.src = "images/pass.png";
+    headingIcon.classList.remove("hidden");
   } else if (frame === "") {
     contentBox.classList.remove("frame-width");
     contentBox.classList.remove("green-frame");
     contentBox.classList.remove("red-frame");
+    // Change heading for red frame
+    heading.textContent = "SoftEnable Study";
+    headingIcon.src = "";
+    headingIcon.classList.add("hidden");
   } else {
     console.log(`ERROR: unknown frame type ${frame}`);
   }

@@ -10,8 +10,19 @@
 </head>
 <body class="bg-gray-50 flex flex-col min-h-screen px-1 py-1">
 
-  <!-- Heading -->
-  <h1 style="font-size: 40px;" class="font-semibold text-gray-800 my-2 text-center">SoftEnable Study</h1>
+  <!-- Heading + dynamic icon -->
+  <div style="flex: 0 0 50%;" class="mx-2 min-w-0 flex items-center justify-center overflow-auto space-x-4">
+      <p id="dynamic-heading"
+        style="font-size: 44px;"
+        class="font-semibold text-gray-800 my-2 text-center">
+        SoftEnable study
+      </p>
+      <img id="heading-icon"
+         src=""
+         alt=""
+         class="hidden w-16 h-16 object-contain"
+         style="width: 100px; height: 100;" />
+    </div>
 
   <!-- Center box that fills remaining vertical space between heading and logos -->
   <div class="flex-grow my-5 flex justify-center">
