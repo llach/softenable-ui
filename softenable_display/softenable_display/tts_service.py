@@ -41,7 +41,7 @@ class TTSService(Node):
         try:
             chunks = self.voice.synthesize(text)
             duration = time.time() - start_time
-            self.get_logger().info(f"Synthesis took {duration:.3f}s")
+            self.get_logger().info(f"Synthesis took {duration:.3f}s | sample rate: {chunk.sample_rate}")
 
             for chunk in chunks:
                 sd.play(chunk.audio_float_array, samplerate=chunk.sample_rate)
