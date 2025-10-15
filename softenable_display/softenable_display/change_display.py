@@ -60,7 +60,7 @@ class SetDisplaySwitcher(Node):
             future.add_done_callback(lambda fut: self.get_logger().info(f"Preset '{preset}' done"))
 
             # Check again before waiting
-            for _ in range(25):
+            for _ in range(20):
                 if self.stop_requested.is_set():
                     self.get_logger().info("Switching aborted during sleep.")
                     return
