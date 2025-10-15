@@ -37,18 +37,18 @@ evtSource.onmessage = (e) => {
     contentBox.classList.remove("green-frame");
 
     // Change heading for red frame
-    heading.textContent = "Do not go near the robot";
+    heading.textContent = "DO NOT GO NEAR THE ROBOT!";
     headingIcon.src = "images/stop.png";
-    headingIcon.classList.remove("hidden");
+    headingIcon.classList = "w-16 h-16 object-contain";
 
   } else if (frame === "green") {
     contentBox.classList.add("green-frame");
     contentBox.classList.add("frame-width");
     contentBox.classList.remove("red-frame");
     // Change heading for red frame
-    heading.textContent = "You can approach the robot";
+    heading.textContent = "YOU CAN APPROACH THE ROBOT";
     headingIcon.src = "images/pass.png";
-    headingIcon.classList.remove("hidden");
+    headingIcon.classList = "w-16 h-16 object-contain";
   } else if (frame === "") {
     contentBox.classList.remove("frame-width");
     contentBox.classList.remove("green-frame");
@@ -56,7 +56,7 @@ evtSource.onmessage = (e) => {
     // Change heading for red frame
     heading.textContent = "SoftEnable Study";
     headingIcon.src = "";
-    headingIcon.classList.add("hidden");
+    headingIcon.classList = "hidden w-16 h-16 object-contain";
   } else {
     console.log(`ERROR: unknown frame type ${frame}`);
   }
