@@ -100,7 +100,7 @@ class ControlPanel(QtWidgets.QMainWindow):
         self.btnUnstackDemo.clicked.connect(lambda: self.run_with_disable(self.btnUnstackDemo, self.ros2_run, "softenable_bt", "grasp_first_layer"))
         self.btnUnstackSlides.clicked.connect(lambda: self.run_with_disable(self.btnUnstackSlides, self.final_slides))
 
-        self.btnUnfold.clicked.connect(lambda: self.action("Unfolding Unfold"))
+        self.btnUnfold.clicked.connect(lambda: self.run_with_disable(self.btnUnstackDemo, self.python_ros2_run, "src/gown_opening/gown_opening/dual_wo_yolo.py"))
 
         self.btnToolsOpen.clicked.connect(lambda: self.run_with_disable(self.btnToolsOpen, self.node.open_grippers))
         self.btnToolsClose.clicked.connect(lambda: self.run_with_disable(self.btnToolsClose, self.node.close_grippers))
@@ -134,6 +134,16 @@ class ControlPanel(QtWidgets.QMainWindow):
 
         # proc = subprocess.Popen(["ros2", "run", package, executable])
         proc = subprocess.Popen(f"ros2 run {package} {executable} {args}".split(" "))
+        if blocking:
+            print("waiting for process to finish ...")
+            proc.wait()
+        print("all done!")
+
+    def python_ros2_run(self, executable, blocking=True, args=""):
+        print(f"ROS2 running '{executable}'")
+
+        # proc = subprocess.Popen(["ros2", "run", package, executable])
+        proc = subprocess.Popen(f"LD_LIBRARY_PATH=/opt/conda/envs/softenable/lib/:$LD_LIBRARY_PATH  python {executable} {args}".split(" "))
         if blocking:
             print("waiting for process to finish ...")
             proc.wait()
