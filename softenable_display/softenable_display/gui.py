@@ -139,8 +139,8 @@ class ControlPanel(QtWidgets.QMainWindow):
         # proc = subprocess.Popen(["ros2", "run", package, executable])
         my_env = os.environ.copy()
         if modify_ld:
-            my_env['LD_LIBRARY_PATH'] = "/opt/conda/envs/softenable/lib/:$LD_LIBRARY_PATH"
-            
+            my_env['LD_LIBRARY_PATH'] = f"/opt/conda/envs/softenable/lib/:{my_env['LD_LIBRARY_PATH']}"
+
         proc = subprocess.Popen(f"ros2 run {package} {executable} {args}".split(" "), env=my_env)
         if blocking:
             print("waiting for process to finish ...")
