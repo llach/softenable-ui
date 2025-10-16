@@ -10,7 +10,7 @@ protocol_bag_2:
   frame: green
 
 protocol_bag_3:
-  text: "Please remove the bag from the table"
+  text: "Please remove the bag"
   frame: green
 
 protocol_2:
