@@ -1,6 +1,7 @@
 import os
 import time
 import rclpy
+import numpy as np
 from rclpy.node import Node
 
 from softenable_display_msgs.srv import TTS
@@ -44,8 +45,7 @@ class TTSService(Node):
             self.get_logger().info(f"Synthesis took {duration:.3f}s | sample rate: {chunk.sample_rate}")
 
             for chunk in chunks:
-                sd.play(chunk.audio_float_array, samplerate=chunk.sample_rate)
-                sd.wait()
+                self.play_audio(chunk)
             
             self.get_logger().info(f"Done talking.")
 
@@ -53,6 +53,23 @@ class TTSService(Node):
             self.get_logger().error(f"Error during synthesis: {e}")
 
         return response
+    
+    def play_audio(self, chunk):
+        supported_rates = [48000, 44100]
+        target_rate = supported_rates[0]
+        if chunk.sample_rate not in supported_rates:
+            self.get_logger().warn(f"Resampling from {chunk.sample_rate} to {target_rate}")
+            ratio = target_rate / chunk.sample_rate
+            new_len = int(len(chunk.audio_float_array) * ratio)
+            resampled = np.interp(
+                np.linspace(0, len(chunk.audio_float_array), new_len),
+                np.arange(len(chunk.audio_float_array)),
+                chunk.audio_float_array
+            )
+            sd.play(resampled, samplerate=target_rate)
+        else:
+            sd.play(chunk.audio_float_array, samplerate=chunk.sample_rate)
+        sd.wait()
 
 
 def main(args=None):
