@@ -93,6 +93,7 @@ class ControlPanel(QtWidgets.QMainWindow):
 
         ##### Button setup
         self.btnBagInitial.clicked.connect(lambda: self.run_with_disable(self.btnBagInitial, self.ros2_run, "stack_approach", "bag_opening", args="initial"))
+        self.btnBagInitial.clicked.connect(lambda: self.run_with_disable(self.btnBagInitialNew, self.ros2_run, "stack_approach", "bag_opening", args="initial_new"))
         self.btnBagDemo.clicked.connect(lambda: self.run_with_disable(self.btnBagDemo, self.ros2_run, "stack_approach", "bag_opening", args="slides"))
         self.btnBagOpen.clicked.connect(lambda: self.run_with_disable(self.btnBagOpen, self.open_and_slide))
         self.btnBagRetreat.clicked.connect(lambda: self.run_with_disable(self.btnBagRetreat, self.ros2_run, "stack_approach", "bag_opening", args="retreat"))
