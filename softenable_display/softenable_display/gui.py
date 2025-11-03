@@ -121,7 +121,7 @@ class ControlPanel(QtWidgets.QMainWindow):
 
     def open_and_slide(self):
         self.node.open_grippers()
-        self.node.set_display("protocol_bag_3")
+        # self.node.set_display("protocol_bag_3")
 
     def slide_eight(self):
         self.node.set_display("protocol_8")
