@@ -50,3 +50,6 @@ protocol_9:
 protocol_10:
   text: "Put on the plastic apron"
   image: unfolding_protocol/Image_10.png
+  
+protocol_11:
+  text: "Thank you! Now you can proceed to the surgery room."

@@ -132,12 +132,11 @@ class ControlPanel(QtWidgets.QMainWindow):
         self.node.set_display("protocol_8", use_tts=True)
 
     def final_slides(self):
-        for p in [
-            "protocol_9",
-            "protocol_10"
-        ]:
-            self.node.set_display(p, use_tts=True)
-            time.sleep(5)
+        self.node.set_display("protocol_9", use_tts=True)
+        time.sleep(5)
+        self.node.set_display("protocol_10", use_tts=True)
+        time.sleep(5)
+        self.node.set_display("protocol_11", use_tts=True)
 
     def ros2_run(self, package, executable, blocking=True, args="", modify_ld=False):
         print(f"ROS2 running '{executable}' from package '{package}'")
