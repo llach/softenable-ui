@@ -62,11 +62,11 @@ class ControlNode(Node):
 
         self.wait_for_futures([fut_l, fut_r])
 
-    def set_display(self, preset):
+    def set_display(self, preset, use_tts=True):
         print(f"setting display preset {preset}")
 
         self.wait_for_futures([
-            self.cli_display.call_async(SetDisplay.Request(name=preset))
+            self.cli_display.call_async(SetDisplay.Request(name=preset, use_tts=use_tts))
         ])
 
     def wait_for_futures(self, futures):
@@ -93,13 +93,14 @@ class ControlPanel(QtWidgets.QMainWindow):
 
         ##### Button setup
         self.btnBagInitial.clicked.connect(lambda: self.run_with_disable(self.btnBagInitial, self.ros2_run, "stack_approach", "bag_opening", args="initial"))
-        self.btnBagInitialNew.clicked.connect(lambda: self.run_with_disable(self.btnBagInitialNew, self.ros2_run, "stack_approach", "bag_opening", args="initial_new"))
+        self.btnBagInitialNew.clicked.connect(lambda: self.run_with_disable(self.btnBagInitialNew, self.intial_new, True))
         self.btnBagDemo.clicked.connect(lambda: self.run_with_disable(self.btnBagDemo, self.ros2_run, "stack_approach", "bag_opening_perc", args="slides"))
         self.btnBagOpen.clicked.connect(lambda: self.run_with_disable(self.btnBagOpen, self.open_and_slide))
         self.btnBagRetreat.clicked.connect(lambda: self.run_with_disable(self.btnBagRetreat, self.ros2_run, "stack_approach", "bag_opening", args="retreat"))
 
         self.btnUnstackDemo.clicked.connect(lambda: self.run_with_disable(self.btnUnstackDemo, self.ros2_run, "softenable_bt", "grasp_first_layer", modify_ld=True))
         self.btnUnstackSlideEight.clicked.connect(lambda: self.run_with_disable(self.btnUnstackSlideEight, self.slide_eight))
+        self.btnUnstackInitial.clicked.connect(lambda: self.run_with_disable(self.btnUnstackInitial, self.intial_new, False))
         self.btnUnstackSlides.clicked.connect(lambda: self.run_with_disable(self.btnUnstackSlides, self.final_slides))
 
         self.btnUnfold.clicked.connect(lambda: self.run_with_disable(self.btnUnstackDemo, self.python_ros2_run, "src/gown_opening/gown_opening/dual_wo_yolo.py"))
@@ -119,19 +120,23 @@ class ControlPanel(QtWidgets.QMainWindow):
         worker = Worker(wrapped)
         self.pool.start(worker)
 
+    def intial_new(self, with_slides):
+        if with_slides: self.node.set_display("protocol_1", use_tts=False)
+        self.ros2_run("stack_approach", "bag_opening", args="initial_new")
+
     def open_and_slide(self):
         self.node.open_grippers()
         # self.node.set_display("protocol_bag_3")
 
     def slide_eight(self):
-        self.node.set_display("protocol_8")
+        self.node.set_display("protocol_8", use_tts=True)
 
     def final_slides(self):
         for p in [
             "protocol_9",
             "protocol_10"
         ]:
-            self.node.set_display(p)
+            self.node.set_display(p, use_tts=True)
             time.sleep(5)
 
     def ros2_run(self, package, executable, blocking=True, args="", modify_ld=False):
