@@ -96,13 +96,14 @@ class ControlPanel(QtWidgets.QMainWindow):
         self.btnBagInitialNew.clicked.connect(lambda: self.run_with_disable(self.btnBagInitialNew, self.intial_new, True))
         self.btnBagDemo.clicked.connect(lambda: self.run_with_disable(self.btnBagDemo, self.ros2_run, "stack_approach", "bag_opening_perc", args="slides"))
         self.btnBagOpen.clicked.connect(lambda: self.run_with_disable(self.btnBagOpen, self.open_and_slide))
-        self.btnBagRetreat.clicked.connect(lambda: self.run_with_disable(self.btnBagRetreat, self.ros2_run, "stack_approach", "bag_opening", args="retreat"))
+        self.btnBagRetreat.clicked.connect(lambda: self.run_with_disable(self.btnBagRetreat, self.retreat, True))
 
         self.btnUnstackDemo.clicked.connect(lambda: self.run_with_disable(self.btnUnstackDemo, self.ros2_run, "softenable_bt", "grasp_first_layer", modify_ld=True))
         self.btnUnstackSlideEight.clicked.connect(lambda: self.run_with_disable(self.btnUnstackSlideEight, self.slide_eight))
         self.btnUnstackInitial.clicked.connect(lambda: self.run_with_disable(self.btnUnstackInitial, self.intial_new, False))
         self.btnUnstackSlides.clicked.connect(lambda: self.run_with_disable(self.btnUnstackSlides, self.final_slides))
 
+        self.btnFallbackRetreat.clicked.connect(lambda: self.run_with_disable(self.btnFallbackRetreat, self.retreat, False))
         self.btnUnfold.clicked.connect(lambda: self.run_with_disable(self.btnUnstackDemo, self.python_ros2_run, "src/gown_opening/gown_opening/dual_wo_yolo.py"))
 
         self.btnToolsOpen.clicked.connect(lambda: self.run_with_disable(self.btnToolsOpen, self.node.open_grippers))
@@ -123,6 +124,10 @@ class ControlPanel(QtWidgets.QMainWindow):
     def intial_new(self, with_slides):
         if with_slides: self.node.set_display("protocol_1", use_tts=False)
         self.ros2_run("stack_approach", "bag_opening", args="initial_new")
+
+    def retreat(self, with_slides):
+        if with_slides: self.node.set_display("protocol_2", use_tts=True)
+        self.ros2_run("stack_approach", "bag_opening", args="retreat")
 
     def open_and_slide(self):
         self.node.open_grippers()

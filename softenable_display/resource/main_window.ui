@@ -51,9 +51,10 @@
     <item>
      <widget class="QGroupBox" name="groupUnfolding">
       <property name="title">
-       <string>Unfolding</string>
+       <string>Fallback Buttons</string>
       </property>
       <layout class="QHBoxLayout" name="horizontalLayout3">
+       <item><widget class="QPushButton" name="btnFallbackRetreat"><property name="text"><string>Retreat</string></property></widget></item>
        <item><widget class="QPushButton" name="btnUnfold"><property name="text"><string>Unfold</string></property></widget></item>
       </layout>
      </widget>
