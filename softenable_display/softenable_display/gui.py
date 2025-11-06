@@ -111,7 +111,7 @@ class ControlPanel(QtWidgets.QMainWindow):
         self.btnUnstackSlides.clicked.connect(lambda: self.run_with_disable(self.btnUnstackSlides, self.final_slides))
 
         self.btnFallbackRetreat.clicked.connect(lambda: self.run_with_disable(self.btnFallbackRetreat, self.retreat, False))
-        self.btnUnfold.clicked.connect(lambda: self.run_with_disable(self.btnUnstackDemo, self.python_ros2_run, "src/gown_opening/gown_opening/dual_wo_yolo.py"))
+        self.btnUnfold.clicked.connect(lambda: self.run_with_disable(self.btnUnstackDemo, self.python_ros2_run, "/home/ros/ws/src/gown_opening/gown_opening/dual_wo_yolo.py"))
         self.btnKillSlides.clicked.connect(lambda: self.run_with_disable(self.btnKillSlides, self.node.kill_slides))
 
         self.btnToolsOpen.clicked.connect(lambda: self.run_with_disable(self.btnToolsOpen, self.node.open_grippers))
@@ -166,7 +166,7 @@ class ControlPanel(QtWidgets.QMainWindow):
         print("all done!")
 
     def python_ros2_run(self, executable, blocking=True, args="", modify_ld=True):
-        print(f"ROS2 running '{executable}'")
+        print(f"Python running '{executable}'")
         my_env = os.environ.copy()
         if modify_ld:
             my_env['LD_LIBRARY_PATH'] = f"/opt/conda/envs/softenable/lib/:{my_env['LD_LIBRARY_PATH']}"
