@@ -4,9 +4,11 @@ protocol_1:
 
 protocol_bag_1:
   text: "While I open the bag, please, start by washing your hands."
+  image: unfolding_protocol/Image_wash_hands.png
   frame: red
 protocol_bag_2:
   text: "Please grasp the gloves from the bag and put them on"
+  image: unfolding_protocol/gloves_compressed.png
   frame: green
 
 protocol_bag_3:
