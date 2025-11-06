@@ -55,3 +55,4 @@ protocol_10:
   
 protocol_11:
   text: "Thank you! Now you can proceed to the surgery room."
+  image: unfolding_protocol/Image_01.png
