@@ -111,7 +111,8 @@ class ControlPanel(QtWidgets.QMainWindow):
         self.btnUnstackSlides.clicked.connect(lambda: self.run_with_disable(self.btnUnstackSlides, self.final_slides))
 
         self.btnFallbackRetreat.clicked.connect(lambda: self.run_with_disable(self.btnFallbackRetreat, self.retreat, False))
-        self.btnUnfold.clicked.connect(lambda: self.run_with_disable(self.btnUnstackDemo, self.python_ros2_run, "/home/ros/ws/src/gown_opening/gown_opening/dual_wo_yolo.py"))
+        self.btnUnfold.clicked.connect(lambda: self.run_with_disable(self.btnUnfold, self.python_ros2_run, "/home/ros/ws/src/gown_opening/gown_opening/dual_wo_yolo.py"))
+        self.btnGownGrasp.clicked.connect(lambda: self.run_with_disable(self.btnGownGrasp, self.python_ros2_run, "/home/ros/ws/src/gown_grasping/gown_grasping/grasp_dinov3.py"))
         self.btnKillSlides.clicked.connect(lambda: self.run_with_disable(self.btnKillSlides, self.node.kill_slides))
 
         self.btnToolsOpen.clicked.connect(lambda: self.run_with_disable(self.btnToolsOpen, self.node.open_grippers))
