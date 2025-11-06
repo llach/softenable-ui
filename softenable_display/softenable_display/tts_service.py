@@ -66,9 +66,9 @@ class TTSService(Node):
                 np.arange(len(chunk.audio_float_array)),
                 chunk.audio_float_array
             )
-            sd.play(resampled, samplerate=target_rate)
+            sd.play(resampled, samplerate=target_rate, device=None)
         else:
-            sd.play(chunk.audio_float_array, samplerate=chunk.sample_rate)
+            sd.play(chunk.audio_float_array, samplerate=chunk.sample_rate, device=None)
         sd.wait()
 
 

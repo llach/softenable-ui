@@ -60,7 +60,7 @@ class SetDisplaySwitcher(Node):
                 response.success = True
                 response.message = "Switching stopped."
         else:
-            response.success = False
+            response.success = True
             response.message = "No switching thread running."
         return response
 
