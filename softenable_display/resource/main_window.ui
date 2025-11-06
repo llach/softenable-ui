@@ -56,6 +56,7 @@
       <layout class="QHBoxLayout" name="horizontalLayout3">
        <item><widget class="QPushButton" name="btnFallbackRetreat"><property name="text"><string>Retreat</string></property></widget></item>
        <item><widget class="QPushButton" name="btnUnfold"><property name="text"><string>Unfold</string></property></widget></item>
+       <item><widget class="QPushButton" name="btnKillSlides"><property name="text"><string>Kill Slides</string></property></widget></item>
       </layout>
      </widget>
     </item>

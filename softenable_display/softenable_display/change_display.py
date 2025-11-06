@@ -14,18 +14,20 @@ class SetDisplaySwitcher(Node):
         while not self.cli_display.wait_for_service(timeout_sec=1.0):
             self.get_logger().info('Waiting for /set_display service...')
 
-        # Service to trigger switching
-        self.srv = self.create_service(Trigger, 'start_switch', self.handle_start_switch)
+        # Service to start switching
+        self.srv_start = self.create_service(Trigger, 'start_switch', self.handle_start_switch)
+        # Kill switch service
+        self.srv_kill = self.create_service(Trigger, 'kill_switch', self.handle_kill_switch)
 
         # State
         self.switch_thread = None
         self.stop_requested = threading.Event()
 
-        self.get_logger().info("Ready. Call /start_switch to start switching displays.")
+        self.get_logger().info("Ready. Call /start_switch to start or /kill_switch to stop switching.")
 
-    # ----------- Service callback -----------
+    # ----------- Start service callback -----------
     def handle_start_switch(self, request, response):
-        """If a switch is running, stop it and start a new one."""
+        """Start switching thread (stop previous if running)."""
         if self.switch_thread and self.switch_thread.is_alive():
             self.get_logger().warn("Previous switching still running. Stopping it first...")
             self.stop_requested.set()
@@ -33,7 +35,7 @@ class SetDisplaySwitcher(Node):
             if self.switch_thread.is_alive():
                 self.get_logger().warn("Previous thread did not stop in time. Forcing restart.")
 
-        # Start new run
+        # Start new thread
         self.stop_requested.clear()
         self.switch_thread = threading.Thread(target=self.switch_displays, daemon=True)
         self.switch_thread.start()
@@ -42,9 +44,29 @@ class SetDisplaySwitcher(Node):
         response.message = "Started display switching (previous one stopped if running)."
         return response
 
-    # ----------- Display switching loop -----------
+    # ----------- Kill switch callback -----------
+    def handle_kill_switch(self, request, response):
+        """Immediately stop the switching thread if it's running."""
+        if self.switch_thread and self.switch_thread.is_alive():
+            self.get_logger().warn("Kill switch activated. Stopping thread NOW...")
+            self.stop_requested.set()
+            self.switch_thread.join(timeout=2.0)
+            if self.switch_thread.is_alive():
+                self.get_logger().error("Thread did not stop within timeout — may still be running!")
+                response.success = False
+                response.message = "Thread did not fully stop."
+            else:
+                self.get_logger().info("Switching thread successfully stopped.")
+                response.success = True
+                response.message = "Switching stopped."
+        else:
+            response.success = False
+            response.message = "No switching thread running."
+        return response
+
+    # ----------- Worker thread -----------
     def switch_displays(self):
-        for i in range(3,8):
+        for i in range(3, 8):
             if self.stop_requested.is_set():
                 self.get_logger().info("Switching aborted.")
                 return
@@ -59,8 +81,7 @@ class SetDisplaySwitcher(Node):
             future = self.cli_display.call_async(req)
             future.add_done_callback(lambda fut: self.get_logger().info(f"Preset '{preset}' done"))
 
-            # Check again before waiting
-            for _ in range(20):
+            for _ in range(20):  # ~20 seconds wait
                 if self.stop_requested.is_set():
                     self.get_logger().info("Switching aborted during sleep.")
                     return

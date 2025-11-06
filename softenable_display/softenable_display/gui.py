@@ -10,6 +10,7 @@ from PyQt5.QtCore import QThreadPool, QRunnable, pyqtSlot
 from ament_index_python.packages import get_package_share_directory
 
 from rclpy.node import Node
+from std_srvs.srv import Trigger
 from stack_msgs.srv import RollerGripper
 from softenable_display_msgs.srv import SetDisplay
 
@@ -33,6 +34,7 @@ class ControlNode(Node):
 
         # create service clients
         self.cli_display = self.create_client(SetDisplay, "set_display")
+        self.kill_slides_cli = self.create_client(Trigger, "kill_switch")
         self.gripper_l_cli = self.create_client(RollerGripper, "left_roller_gripper")
         self.gripper_r_cli = self.create_client(RollerGripper, "right_roller_gripper")
 
@@ -74,6 +76,11 @@ class ControlNode(Node):
             while not f.done() and rclpy.ok():
                 rclpy.spin_once(self, timeout_sec=0.1)
 
+    def kill_slides(self):
+        self.wait_for_futures([
+            self.kill_slides_cli.call_async(Trigger.Request())
+        ])
+
 class ControlPanel(QtWidgets.QMainWindow):
     def __init__(self):
         super().__init__()
@@ -105,6 +112,7 @@ class ControlPanel(QtWidgets.QMainWindow):
 
         self.btnFallbackRetreat.clicked.connect(lambda: self.run_with_disable(self.btnFallbackRetreat, self.retreat, False))
         self.btnUnfold.clicked.connect(lambda: self.run_with_disable(self.btnUnstackDemo, self.python_ros2_run, "src/gown_opening/gown_opening/dual_wo_yolo.py"))
+        self.btnKillSlides.clicked.connect(lambda: self.run_with_disable(self.btnKillSlides, self.node.kill_slides))
 
         self.btnToolsOpen.clicked.connect(lambda: self.run_with_disable(self.btnToolsOpen, self.node.open_grippers))
         self.btnToolsClose.clicked.connect(lambda: self.run_with_disable(self.btnToolsClose, self.node.close_grippers))
