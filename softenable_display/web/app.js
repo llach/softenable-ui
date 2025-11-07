@@ -37,7 +37,7 @@ evtSource.onmessage = (e) => {
     contentBox.classList.remove("green-frame");
 
     // Change heading for red frame
-    heading.textContent = "DO NOT GO NEAR THE ROBOT!";
+    heading.textContent = "¡POR FAVOR, NO SE ACERQUE AL ROBOT!";
     headingIcon.src = "images/stop.png";
     headingIcon.classList = "w-16 h-16 object-contain";
 
@@ -46,7 +46,7 @@ evtSource.onmessage = (e) => {
     contentBox.classList.add("frame-width");
     contentBox.classList.remove("red-frame");
     // Change heading for red frame
-    heading.textContent = "YOU CAN APPROACH THE ROBOT";
+    heading.textContent = "PUEDE ACERCARSE AL ROBOT";
     headingIcon.src = "images/pass.png";
     headingIcon.classList = "w-16 h-16 object-contain";
   } else if (frame === "") {
