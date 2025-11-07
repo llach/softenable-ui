@@ -1,58 +1,58 @@
 protocol_1:
-  text: "Welcome to the SoftEnable hospital robotic assistant demo!"
+  text: "Bienvenido a la demo del asistente robotico de SoftEnable!"
   image: unfolding_protocol/Image_01.png
 
 protocol_bag_1:
-  text: "While I open the bag, please, put on the mask."
+  text: "Mientras abro la bolsa, por favor, pongase la mascarilla."
   image: unfolding_protocol/Image_09.png
   frame: red
 protocol_bag_2:
-  text: "Please grasp the gloves from the bag and put them on"
+  text: "Por favor, agarre los guantes de la bolsa y pongaselos."
   image: unfolding_protocol/gloves_compressed.png
   frame: green
 
 protocol_bag_3:
-  text: "Please remove the bag"
+  text: "Por favor, retira la bolsa."
   frame: green
 
 protocol_2:
-  text: "While I prepare your gown, continue the dressing protocol standing in front of the counter"
+  text: "Mientras preparo la bata, continue con el protocolo"
   image: unfolding_protocol/Image_02.png
   frame: red
 
 protocol_3:
-  text: "Remove any jewelry or watch"
+  text: "Quitese cualquier joya o reloj"
   image: unfolding_protocol/Image_03.png
   frame: red
 protocol_4:
-  text: "Tuck the inner coat into your trousers"
+  text: "Pongase la parte de arriba del pijama dentro de los pantalones"
   image: unfolding_protocol/Image_04.png
   frame: red
 protocol_5:
-  text: "Tie up your hair and put on the cap"
+  text: "Recogase el pelo y pongase el gorro"
   image: unfolding_protocol/Image_05.png
   frame: red
 protocol_6:
-  text: "Apply hand sanitizer"
+  text: "Apliquese gel hidroalcoholico"
   image: unfolding_protocol/Image_06.png
   frame: red
 protocol_7:
-  text: "Put on a second pair of gloves"
+  text: "Pongase el primer par de guantes"
   image: unfolding_protocol/Image_07.png
   frame: red
   
 protocol_8:
-  text: "Take the gown I'm handing you and put it on"
+  text: "Recoja la bata que le estoy dando y pongasela"
   image: unfolding_protocol/Image_08.png
   frame: green
 
 protocol_9:
-  text: "Put on a face mask"
+  text: "Pongase la mascarilla"
   image: unfolding_protocol/Image_09.png
 protocol_10:
-  text: "Put on the plastic apron"
+  text: "Si es necesario, pongase el delantal"
   image: unfolding_protocol/Image_10.png
   
 protocol_11:
-  text: "Thank you! Now you can proceed to the surgery room."
+  text: "Gracias! Ahora puede proceder a la sala."
   image: unfolding_protocol/Image_01.png

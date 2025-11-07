@@ -147,8 +147,8 @@ class ControlPanel(QtWidgets.QMainWindow):
 
     def final_slides(self):
         self.node.set_display("protocol_9", use_tts=True)
-        time.sleep(5)
-        self.node.set_display("protocol_10", use_tts=True)
+        # time.sleep(5)
+        # self.node.set_display("protocol_10", use_tts=True)
         time.sleep(5)
         self.node.set_display("protocol_11", use_tts=True)
 
