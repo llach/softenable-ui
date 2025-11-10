@@ -54,5 +54,5 @@ protocol_10:
   image: unfolding_protocol/Image_10.png
   
 protocol_11:
-  text: "Gracias! Ahora puede proceder a la sala."
+  text: "Gracias! Ahora puede proceder."
   image: unfolding_protocol/Image_01.png
