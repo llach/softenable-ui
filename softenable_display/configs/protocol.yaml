@@ -29,7 +29,7 @@ protocol_4:
   image: unfolding_protocol/Image_04.png
   frame: red
 protocol_5:
-  text: "Recogase el pelo y pongase el gorro"
+  text: "Recojase el pelo y pongase el gorro"
   image: unfolding_protocol/Image_05.png
   frame: red
 protocol_6:
