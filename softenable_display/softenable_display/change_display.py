@@ -66,7 +66,7 @@ class SetDisplaySwitcher(Node):
 
     # ----------- Worker thread -----------
     def switch_displays(self):
-        for i in range(3, 8):
+        for i in range(1, 8):
             if self.stop_requested.is_set():
                 self.get_logger().info("Switching aborted.")
                 return
@@ -81,7 +81,7 @@ class SetDisplaySwitcher(Node):
             future = self.cli_display.call_async(req)
             future.add_done_callback(lambda fut: self.get_logger().info(f"Preset '{preset}' done"))
 
-            for _ in range(20):  # ~20 seconds wait
+            for _ in range(13):  # ~20 seconds wait
                 if self.stop_requested.is_set():
                     self.get_logger().info("Switching aborted during sleep.")
                     return
