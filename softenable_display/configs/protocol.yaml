@@ -1,58 +1,71 @@
 protocol_1:
-  text: "Bienvenido a la demo del asistente robotico de SoftEnable!"
+  # text: "Bienvenido a la demo del asistente robotico de SoftEnable!"
+  text: "Welcome to SoftEnable's robotic assistant demo!"
   image: unfolding_protocol/Image_01.png
 
 protocol_bag_1:
-  text: "Mientras abro la bolsa, por favor, pongase la mascarilla."
+  # text: "Mientras abro la bolsa, por favor, pongase la mascarilla."
+  text: "While I open the bag, please, put on the mask."
   image: unfolding_protocol/Image_09.png
   frame: red
 protocol_bag_2:
-  text: "Por favor, agarre los guantes de la bolsa y pongaselos."
+  # text: "Por favor, agarre los guantes de la bolsa y pongaselos."
+  text: "Please, grasp the gloves from the bag and put them on."
   image: unfolding_protocol/gloves_compressed.png
   frame: green
 
 protocol_bag_3:
-  text: "Por favor, retira la bolsa."
+  # text: "Por favor, retira la bolsa."
+  text: "Please, remove the bag."
   frame: green
 
 protocol_2:
-  text: "Mientras preparo la bata, continue con el protocolo"
+  # text: "Mientras preparo la bata, continue con el protocolo"
+  text: "While I prepare the gown, please continue with the protocol."
   image: unfolding_protocol/Image_02.png
   frame: red
 
 protocol_3:
-  text: "Quitese cualquier joya o reloj"
+  # text: "Quitese cualquier joya o reloj"
+  text: "Remove any jewelry or watch."
   image: unfolding_protocol/Image_03.png
   frame: red
 protocol_4:
-  text: "Pongase la parte de arriba del pijama dentro de los pantalones"
+  # text: "Pongase la parte de arriba del pijama dentro de los pantalones"
+  text: "Tuck in the upper part of the pyjamas."
   image: unfolding_protocol/Image_04.png
   frame: red
 protocol_5:
-  text: "Recojase el pelo y pongase el gorro"
+  # text: "Recojase el pelo y pongase el gorro"
+  text: "Tie your hair back and put on the hat."
   image: unfolding_protocol/Image_05.png
   frame: red
 protocol_6:
-  text: "Apliquese gel hidroalcoholico"
+  # text: "Apliquese gel hidroalcoholico"
+  text: "Apply the hydroalcoholic gel."
   image: unfolding_protocol/Image_06.png
   frame: red
 protocol_7:
-  text: "Pongase el primer par de guantes"
+  # text: "Pongase el primer par de guantes"
+  text: "Place the first pair of gloves."
   image: unfolding_protocol/Image_07.png
   frame: red
   
 protocol_8:
-  text: "Recoja la bata que le estoy dando y pongasela"
+  # text: "Recoja la bata que le estoy dando y pongasela"
+  text: "Pick up the gown and place it on."
   image: unfolding_protocol/Image_08.png
   frame: green
 
 protocol_9:
-  text: "Pongase la mascarilla"
+  # text: "Pongase la mascarilla"
+  text: "Put on the mask."
   image: unfolding_protocol/Image_09.png
 protocol_10:
   text: "Si es necesario, pongase el delantal"
   image: unfolding_protocol/Image_10.png
   
 protocol_11:
-  text: "Gracias! Ahora puede proceder."
+  # text: "Gracias! Ahora puede proceder."
+  text: "Thank you!"
   image: unfolding_protocol/Image_01.png
