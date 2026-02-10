@@ -117,6 +117,7 @@ class ControlPanel(QtWidgets.QMainWindow):
 
         self.btnToolsOpen.clicked.connect(lambda: self.run_with_disable(self.btnToolsOpen, self.node.open_grippers))
         self.btnToolsClose.clicked.connect(lambda: self.run_with_disable(self.btnToolsClose, self.node.close_grippers))
+        self.btnGGInitial.clicked.connect(lambda: self.run_with_disable(self.btnGGInitial, self.gg_initial))
 
     def run_with_disable(self, button, func, *args, **kwargs):
 
@@ -133,6 +134,9 @@ class ControlPanel(QtWidgets.QMainWindow):
     def intial_new(self, with_slides):
         if with_slides: self.node.set_display("protocol_1", use_tts=False)
         self.ros2_run("stack_approach", "bag_opening", args="initial_new")
+
+    def gg_initial(self):
+        self.ros2_run("stack_approach", "bag_opening", args="gg_initial")
 
     def retreat(self, with_slides):
         if with_slides: self.node.set_display("protocol_2", use_tts=True)
