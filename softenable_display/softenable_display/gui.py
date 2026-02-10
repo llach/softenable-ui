@@ -123,9 +123,9 @@ class ControlPanel(QtWidgets.QMainWindow):
 
         def wrapped():
             print("calling button:", button.text())
-            button.setEnabled(False)
+            # button.setEnabled(False)
             func(*args, **kwargs)
-            button.setEnabled(True)
+            # button.setEnabled(True)
             print("done:", button.text())
 
         worker = Worker(wrapped)
