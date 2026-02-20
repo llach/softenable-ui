@@ -15,7 +15,7 @@ class TTSService(Node):
 
         # Declare and read model path parameter
         # default_model_path = f"{os.environ['HOME']}/es_ES-davefx-medium.onnx"
-        default_model_path = f"{os.environ['HOME']}/en_US-lessac-high.onnx.json"
+        default_model_path = f"{os.environ['HOME']}/en_US-lessac-high.onnx"
         self.declare_parameter('model_path', default_model_path)
         model_path = self.get_parameter('model_path').get_parameter_value().string_value
 
