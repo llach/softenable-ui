@@ -15,7 +15,7 @@ protocol_bag_2:
   frame: green
 protocol_bag_3:
   # text: "Por favor, retira la bolsa."
-  text: "Stand back, while I dispose of the bag."
+  text: "Please stand back, while I dispose of the bag."
   frame: red
 
 protocol_2:
