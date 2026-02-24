@@ -13,11 +13,10 @@ protocol_bag_2:
   text: "Please, grasp the gloves from the bag and put them on."
   image: unfolding_protocol/gloves_compressed.png
   frame: green
-
 protocol_bag_3:
   # text: "Por favor, retira la bolsa."
-  text: "Please, remove the bag."
-  frame: green
+  text: "Stand back, while I dispose of the bag."
+  frame: red
 
 protocol_2:
   # text: "Mientras preparo la bata, continue con el protocolo"
