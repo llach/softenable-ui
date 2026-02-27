@@ -132,7 +132,7 @@ class ControlPanel(QtWidgets.QMainWindow):
         self.pool.start(worker)
 
     def intial_new(self, with_slides):
-        if with_slides: self.node.set_display("protocol_1", use_tts=False)
+        # if with_slides: self.node.set_display("protocol_1", use_tts=False)
         self.ros2_run("stack_approach", "bag_opening", args="initial_new")
 
     def gg_initial(self):
