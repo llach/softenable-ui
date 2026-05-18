@@ -11,7 +11,7 @@ from ament_index_python.packages import get_package_share_directory
 
 from rclpy.node import Node
 from std_srvs.srv import Trigger
-from stack_msgs.srv import RollerGripper
+from stack_msgs.srv import RollerGripper, RollerGripperV2
 from softenable_display_msgs.srv import SetDisplay
 
 
@@ -35,8 +35,11 @@ class ControlNode(Node):
         # create service clients
         self.cli_display = self.create_client(SetDisplay, "set_display")
         self.kill_slides_cli = self.create_client(Trigger, "kill_switch")
+        self.grasp_dual_serv_cli = self.create_client(Trigger, "grasp_dual_service")
         self.gripper_l_cli = self.create_client(RollerGripper, "left_roller_gripper")
         self.gripper_r_cli = self.create_client(RollerGripper, "right_roller_gripper")
+        self.gripper_l_cli2 =  self.create_client(RollerGripperV2, "left_gripper_normalized")
+        self.gripper_r_cli2 =  self.create_client(RollerGripperV2, "right_gripper_normalized")
 
         ### check if services are running. not good when debugging.
         # for cli in [
@@ -50,17 +53,21 @@ class ControlNode(Node):
 
     def open_grippers(self):
         print("opening gripper")
-
-        fut_l = self.gripper_l_cli.call_async(RollerGripper.Request(finger_pos=2000))
-        fut_r = self.gripper_r_cli.call_async(RollerGripper.Request(finger_pos=2500))
+        goal = 1.0
+        fut_r = self.gripper_r_cli2.call_async(RollerGripperV2.Request(position=goal))
+        fut_l = self.gripper_l_cli2.call_async(RollerGripperV2.Request(position=goal))
+        # fut_l = self.gripper_l_cli.call_async(RollerGripper.Request(finger_pos=2000))
+        # fut_r = self.gripper_r_cli.call_async(RollerGripper.Request(finger_pos=2500))
 
         self.wait_for_futures([fut_l, fut_r])
 
     def close_grippers(self):
         print("closing gripper")
-
-        fut_l = self.gripper_l_cli.call_async(RollerGripper.Request(finger_pos=3400))
-        fut_r = self.gripper_r_cli.call_async(RollerGripper.Request(finger_pos=800))
+        goal = -0.1
+        fut_r = self.gripper_r_cli2.call_async(RollerGripperV2.Request(position=goal))
+        fut_l = self.gripper_l_cli2.call_async(RollerGripperV2.Request(position=goal))
+        # fut_l = self.gripper_l_cli.call_async(RollerGripper.Request(finger_pos=3400))
+        # fut_r = self.gripper_r_cli.call_async(RollerGripper.Request(finger_pos=800))
 
         self.wait_for_futures([fut_l, fut_r])
 
@@ -75,6 +82,11 @@ class ControlNode(Node):
         for f in futures: 
             while not f.done() and rclpy.ok():
                 rclpy.spin_once(self, timeout_sec=0.1)
+
+    def grasp_service(self):
+        self.wait_for_futures([
+            self.grasp_dual_serv_cli.call_async(Trigger.Request())
+        ])
 
     def kill_slides(self):
         self.wait_for_futures([
@@ -112,7 +124,8 @@ class ControlPanel(QtWidgets.QMainWindow):
 
         self.btnFallbackRetreat.clicked.connect(lambda: self.run_with_disable(self.btnFallbackRetreat, self.retreat, False))
         self.btnUnfold.clicked.connect(lambda: self.run_with_disable(self.btnUnfold, self.python_ros2_run, "/home/ros/ws/src/gown_opening/gown_opening/dual_wo_yolo.py"))
-        self.btnGownGrasp.clicked.connect(lambda: self.run_with_disable(self.btnGownGrasp, self.python_ros2_run, "/home/ros/ws/src/gown_grasping/gown_grasping/grasp_dinov3.py"))
+        # self.btnGownGrasp.clicked.connect(lambda: self.run_with_disable(self.btnGownGrasp, self.python_ros2_run, "/home/ros/ws/src/gown_grasping/gown_grasping/grasp_dinov3.py"))
+        self.btnGownGrasp.clicked.connect(lambda: self.run_with_disable(self.btnGownGrasp, self.node.grasp_service))
         self.btnKillSlides.clicked.connect(lambda: self.run_with_disable(self.btnKillSlides, self.node.kill_slides))
 
         self.btnToolsOpen.clicked.connect(lambda: self.run_with_disable(self.btnToolsOpen, self.node.open_grippers))
