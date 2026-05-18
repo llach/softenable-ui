@@ -36,6 +36,7 @@ class ControlNode(Node):
         self.cli_display = self.create_client(SetDisplay, "set_display")
         self.kill_slides_cli = self.create_client(Trigger, "kill_switch")
         self.grasp_dual_serv_cli = self.create_client(Trigger, "grasp_dual_service")
+        self.unfold_serv_cli = self.create_client(Trigger, "gown_unfold_service")
         self.gripper_l_cli = self.create_client(RollerGripper, "left_roller_gripper")
         self.gripper_r_cli = self.create_client(RollerGripper, "right_roller_gripper")
         self.gripper_l_cli2 =  self.create_client(RollerGripperV2, "left_gripper_normalized")
@@ -83,6 +84,11 @@ class ControlNode(Node):
             while not f.done() and rclpy.ok():
                 rclpy.spin_once(self, timeout_sec=0.1)
 
+    def unfold_service(self):
+        self.wait_for_futures([
+            self.unfold_serv_cli.call_async(Trigger.Request())
+        ])
+
     def grasp_service(self):
         self.wait_for_futures([
             self.grasp_dual_serv_cli.call_async(Trigger.Request())
@@ -123,8 +129,9 @@ class ControlPanel(QtWidgets.QMainWindow):
         self.btnUnstackSlides.clicked.connect(lambda: self.run_with_disable(self.btnUnstackSlides, self.final_slides))
 
         self.btnFallbackRetreat.clicked.connect(lambda: self.run_with_disable(self.btnFallbackRetreat, self.retreat, False))
-        self.btnUnfold.clicked.connect(lambda: self.run_with_disable(self.btnUnfold, self.python_ros2_run, "/home/ros/ws/src/gown_opening/gown_opening/dual_wo_yolo.py"))
+        # self.btnUnfold.clicked.connect(lambda: self.run_with_disable(self.btnUnfold, self.python_ros2_run, "/home/ros/ws/src/gown_opening/gown_opening/dual_wo_yolo.py"))
         # self.btnGownGrasp.clicked.connect(lambda: self.run_with_disable(self.btnGownGrasp, self.python_ros2_run, "/home/ros/ws/src/gown_grasping/gown_grasping/grasp_dinov3.py"))
+        self.btnUnfold.clicked.connect(lambda: self.run_with_disable(self.btnUnfold, self.node.unfold_service))
         self.btnGownGrasp.clicked.connect(lambda: self.run_with_disable(self.btnGownGrasp, self.node.grasp_service))
         self.btnKillSlides.clicked.connect(lambda: self.run_with_disable(self.btnKillSlides, self.node.kill_slides))
 
