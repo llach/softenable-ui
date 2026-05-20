@@ -1,36 +1,48 @@
 study-1:
+  text: "Bienvenido al asistente robótico de SoftEnable!"
   image: study2026/SLIDES.001.jpeg
   full_screen: True
 study-2:
+  text: "Si estoy en verde, puede acercarse. En rojo, manténgase alejado. Mientras preparo la bata, continúe con el protocolo."
   image: study2026/SLIDES.002.jpeg
   full_screen: True
 study-3:
+  text: "Por favor, quítese las joyas y el reloj."
   image: study2026/SLIDES.003.jpeg
   full_screen: True
 study-4:
+  text: "Póngase la parte de arriba del pijama dentro de los pantalones."
   image: study2026/SLIDES.004.jpeg
   full_screen: True
 study-5:
+  text: "Recójase el pelo y póngase el gorro."
   image: study2026/SLIDES.005.jpeg
   full_screen: True
 study-6:
+  text: "Aplíquese gel hidroalcóholico."
   image: study2026/SLIDES.006.jpeg
   full_screen: True
 study-7:
+  text: "Póngase el primer par de guantes."
   image: study2026/SLIDES.007.jpeg
   full_screen: True
 study-8:
+  text: "Recoja la bata que le estoy dando y póngasela."
   image: study2026/SLIDES.008.jpeg
   full_screen: True
 study-9:
+  text: "Mientras abro la bolsa, por favor, continúe. Póngase la mascarilla."
   image: study2026/SLIDES.009.jpeg
   full_screen: True
 study-10:
+  text: "Póngase el delantal."
   image: study2026/SLIDES.010.jpeg
   full_screen: True
 study-11:
+  text: "Coja los guantes de la bolsa y póngaselos."
   image: study2026/SLIDES.011.jpeg
   full_screen: True
 study-12:
+  text: "Por favor, retírese. El protocolo ha finalizado."
   image: study2026/SLIDES.012.jpeg
   full_screen: True
