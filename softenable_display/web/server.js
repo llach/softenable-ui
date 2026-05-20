@@ -70,8 +70,9 @@ const server = http.createServer((req, res) => {
         const frame = String(data.frame || "");
         console.log(data);
         const image = "image" in data ? String(data.image || "") : ""; // <— missing => clear
+        const full_screen = data.full_screen === true || String(data.full_screen).toLowerCase() === "true";
 
-        const payload = { text, frame, image };
+        const payload = { text, frame, image, full_screen };
         const msg = `data: ${JSON.stringify(payload)}\n\n`;
         clients.forEach((c) => c.write(msg));
         res.writeHead(200);

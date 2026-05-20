@@ -7,8 +7,21 @@ const img = document.getElementById("dynamic-image");
 const textEl = document.getElementById("dynamic-text");
 const contentBox = document.getElementById("content-box");
 
+const fsContainer = document.getElementById("fullscreen-container");
+const fsImage = document.getElementById("fullscreen-image");
+
 evtSource.onmessage = (e) => {
-  const { text, frame, image } = JSON.parse(e.data);
+  const { text, frame, image, full_screen } = JSON.parse(e.data);
+
+  if (full_screen) {
+    fsContainer.style.display = "flex";
+    if (image && image.length) {
+      fsImage.src = image;
+    }
+    return;
+  } else {
+    fsContainer.style.display = "none";
+  }
 
   console.log(`Got payload:\n${JSON.stringify(JSON.parse(e.data), null, 2)}`);
 

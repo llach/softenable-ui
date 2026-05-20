@@ -87,12 +87,12 @@ class DisplayService(Node):
                     self.get_logger().warn(f"Skip '{name}' in {path}: value must be a mapping")
                     continue
 
-                extra = set(spec.keys()) - {"text", "image", "frame"}
+                extra = set(spec.keys()) - {"text", "image", "full_screen"}
                 if extra:
                     self.get_logger().warn(f"Skip '{name}' in {path}: unknown keys {sorted(extra)}")
                     continue
-                if "text" not in spec or not isinstance(spec["text"], str) or not spec["text"]:
-                    self.get_logger().warn(f"Skip '{name}' in {path}: 'text' is required non-empty string")
+                if not spec.get("full_screen") and ("text" not in spec or not isinstance(spec["text"], str) or not spec["text"]):
+                    self.get_logger().warn(f"Skip '{name}' in {path}: 'text' is required non-empty string unless full_screen is True")
                     continue
 
                 # normalize optional image relative to webroot/images
@@ -113,7 +113,11 @@ class DisplayService(Node):
                 else:
                     image_rel = ""
 
-                candidates.append((path, name, {"text": spec["text"], "image": image_rel, "frame": spec.get("frame", "")}))
+                candidates.append((path, name, {
+                    "text": spec.get("text", ""),
+                    "image": image_rel,
+                    "full_screen": bool(spec.get("full_screen"))
+                }))
 
         # ---- duplicate names detection (across all files and within a single file) ----
         dup_names = sorted([n for n, c in counts.items() if c > 1])
@@ -153,10 +157,10 @@ class DisplayService(Node):
             return res
 
         payload = {
-            'text': preset['text'],
+            'text': preset.get('text', ''),
             # send empty string to clear image, or 'images/...' to show
-            'image': preset['image'],
-            'frame': preset.get("frame", "")
+            'image': preset.get('image', ''),
+            'full_screen': preset.get('full_screen', False)
         }
 
         self.get_logger().info(f"\n\n{preset}\npayload\n{payload}")
@@ -171,8 +175,8 @@ class DisplayService(Node):
                 self.get_logger().error(f"Server returned {r.status_code}: {r.text}")
                 res.success = False
             
-            if req.use_tts:
-                self.tts_cli.call_async(TTS.Request(text = preset['text']))
+            if req.use_tts and payload['text']:
+                self.tts_cli.call_async(TTS.Request(text = payload['text']))
 
         except Exception as e:
             self.get_logger().error(f"POST {self.url} failed: {e}")

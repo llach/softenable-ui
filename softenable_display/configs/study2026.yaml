@@ -1,0 +1,36 @@
+study-1:
+  image: study2026/SLIDES.001.jpeg
+  full_screen: True
+study-2:
+  image: study2026/SLIDES.002.jpeg
+  full_screen: True
+study-3:
+  image: study2026/SLIDES.003.jpeg
+  full_screen: True
+study-4:
+  image: study2026/SLIDES.004.jpeg
+  full_screen: True
+study-5:
+  image: study2026/SLIDES.005.jpeg
+  full_screen: True
+study-6:
+  image: study2026/SLIDES.006.jpeg
+  full_screen: True
+study-7:
+  image: study2026/SLIDES.007.jpeg
+  full_screen: True
+study-8:
+  image: study2026/SLIDES.008.jpeg
+  full_screen: True
+study-9:
+  image: study2026/SLIDES.009.jpeg
+  full_screen: True
+study-10:
+  image: study2026/SLIDES.010.jpeg
+  full_screen: True
+study-11:
+  image: study2026/SLIDES.011.jpeg
+  full_screen: True
+study-12:
+  image: study2026/SLIDES.012.jpeg
+  full_screen: True
