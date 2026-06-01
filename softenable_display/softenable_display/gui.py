@@ -123,7 +123,8 @@ class ControlPanel(QtWidgets.QMainWindow):
         self.btnBagOpen.clicked.connect(lambda: self.run_with_disable(self.btnBagOpen, self.open_and_slide))
         self.btnBagRetreat.clicked.connect(lambda: self.run_with_disable(self.btnBagRetreat, self.retreat, True))
 
-        self.btnUnstackDemo.clicked.connect(lambda: self.run_with_disable(self.btnUnstackDemo, self.ros2_run, "softenable_bt", "grasp_first_layer", modify_ld=True))
+        # self.btnUnstackDemo.clicked.connect(lambda: self.run_with_disable(self.btnUnstackDemo, self.ros2_run, "softenable_bt", "grasp_first_layer", modify_ld=True))
+        self.btnUnstackDemo.clicked.connect(lambda: self.run_with_disable(self.btnUnstackDemo, self.python_ros2_run, "src/stack_approach/stack_approach/stack_choice.py slides"))
         self.btnUnstackSlideEight.clicked.connect(lambda: self.run_with_disable(self.btnUnstackSlideEight, self.slide_eight))
         self.btnUnstackInitial.clicked.connect(lambda: self.run_with_disable(self.btnUnstackInitial, self.intial_new, False))
         self.btnUnstackSlides.clicked.connect(lambda: self.run_with_disable(self.btnUnstackSlides, self.final_slides))
